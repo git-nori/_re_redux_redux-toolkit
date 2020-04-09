@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-
-import { fetchPosts } from '../actions/postsActions'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchPosts, postsSelector } from '../modules/postsModule'
 import { Post } from '../components/Post'
 import './PostsPage.css'
 
-// propsでstoreからstateを受け取る
-const PostsPage = ({ dispatch, loading, posts, hasErrors }) => {
+const PostsPage = () => {
+  const dispatch = useDispatch()
+  // storeからstateの値を格納
+  const { posts, loading, hasErrors } = useSelector(postsSelector)
 
   // Componentのライフサイクル時に発火
   useEffect(() => {
@@ -28,12 +28,4 @@ const PostsPage = ({ dispatch, loading, posts, hasErrors }) => {
   )
 }
 
-// propsで受け取るstoreの値の設定
-const mapStateToProps = state => ({
-  loading: state.posts.loading,
-  posts: state.posts.posts,
-  hasErrors: state.posts.hasErrors
-})
-
-// storeとcomponent(PostsPage)をconnect
-export default connect(mapStateToProps)(PostsPage)
+export default PostsPage
