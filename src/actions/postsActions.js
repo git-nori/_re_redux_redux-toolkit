@@ -9,7 +9,7 @@ export const getPosts = () => ({
 
 export const getPostsSuccess = posts => ({
   type: GET_POSTS_SUCCESS,
-  posts
+  payload: posts
 })
 
 export const getPostsFailure = () => ({
@@ -17,19 +17,19 @@ export const getPostsFailure = () => ({
 })
 
 // thunk function
-export function fetchPosts() {
+export function fetchPosts () {
   return async dispatch => {
     // Pending
     dispatch(getPosts())
 
-    try{
+    try {
       const API_URL = 'https://jsonplaceholder.typicode.com/posts'
       const response = await fetch(API_URL)
       const data = await response.json()
 
       // Fullfilled
       dispatch(getPostsSuccess(data))
-    } catch(errpr) {
+    } catch (errpr) {
       // Rejected
       dispatch(getPostsFailure())
     }

@@ -2,8 +2,10 @@ import React from 'react'
 
 // propsでpostを受け取る
 export const Post = ({ post }) => {
-  <article>
-    <h2>{post.title}</h2>
-    <p>{post.body.substring(0, 100)}</p>
-  </article>
+  return (
+    <article>
+      <h2>{post.title}</h2>
+      <p>{post.body.substring(0, 100)}</p>
+    </article>
+  )
 }
