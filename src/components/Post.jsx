@@ -6,6 +6,7 @@ export const Post = ({ post }) => {
     <article>
       <h2>{post.title}</h2>
       <p>{post.body.substring(0, 100)}</p>
+      <hr/>
     </article>
   )
 }
