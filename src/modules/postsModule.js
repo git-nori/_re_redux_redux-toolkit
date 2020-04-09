@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 export const initialState = {
   posts: [],
@@ -6,21 +6,33 @@ export const initialState = {
   hasErrors: false
 }
 
+// Thunk action
+export const fetchPosts = createAsyncThunk(
+  'posts/fetchPosts',
+  async () => {
+    const API_URL = 'https://jsonplaceholder.typicode.com/posts'
+    const response = await fetch(API_URL)
+    const data = await response.json()
+    return data
+  }
+)
+
 const postsModule = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    getPosts: state => {
-      state.loading = true
-    },
-    getPostsSuccess: (state, { payload }) => {
-      state.loading = false
+  },
+  extraReducers: {
+    // createAsyncThunkで定義した非同期処理のステータスに応じて切り分ける処理を記述
+    [fetchPosts.pending]: state => { state.loading = true },
+    [fetchPosts.fulfilled]: (state, { payload }) => {
       state.posts = payload
+      state.loading = false
       state.hasErrors = false
     },
-    getPostsFailure: state => {
+    [fetchPosts.rejected]: state => {
       state.loading = false
-      state.hasErrors = true
+      state.hasErrors = false
     }
   }
 })
@@ -32,20 +44,3 @@ export const { getPosts, getPostsSuccess, getPostsFailure } = postsModule.action
 export const postsSelector = state => state.posts
 
 export default postsModule
-
-// thunk function
-export function fetchPosts () {
-  return async dispatch => {
-    dispatch(getPosts())
-
-    try {
-      const API_URL = 'https://jsonplaceholder.typicode.com/posts'
-      const response = await fetch(API_URL)
-      const data = await response.json()
-
-      dispatch(getPostsSuccess(data))
-    } catch (error) {
-      dispatch(getPostsFailure())
-    }
-  }
-}
